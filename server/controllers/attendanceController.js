@@ -47,8 +47,6 @@ const markAttendance = async (req, res) => {
 };
 
 const updateAttendance = async (req, res) => {
-  console.log("In update attendance");
-
   try {
     const updated = await Attendance.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updated) return res.status(404).json({ message: "Attendance record not found" });

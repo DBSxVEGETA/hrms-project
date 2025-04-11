@@ -1,7 +1,6 @@
-
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import API from 'axios'
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "axios";
 
 const LogoutPage = () => {
   const navigate = useNavigate();
@@ -10,50 +9,40 @@ const LogoutPage = () => {
 
   const checkUserIsAuth = async () => {
     try {
-      const res = await API.get(
-        "http://localhost:9500/api/auth/checkAuth",
-        {
-          withCredentials: true, // 💥 Accept cookies from backend
-        }
-      );
-      console.log("res - " , res.data?.user);
+      const res = await API.get("http://localhost:9500/api/auth/checkAuth", {
+        withCredentials: true, // 💥 Accept cookies from backend
+      });
+      console.log("res - ", res.data?.user);
       setAuthUser(res.data?.user);
     } catch (err: any) {
-        console.error("Side bar error");   
+      console.error("Side bar error");
     }
   };
 
   const handleLogOut = async () => {
-    console.log("Click logout");
-  
     try {
-      const res = await API.post(
-        "http://localhost:9500/api/auth/logout",
-        {},
-        { withCredentials: true }
-      );
-  
+      const res = await API.post("http://localhost:9500/api/auth/logout", {}, { withCredentials: true });
+
       console.log("Logged out -", res.data);
 
-      setAuthUser(null); 
+      setAuthUser(null);
 
       navigate("/auth");
     } catch (err: any) {
       console.error("Logout error:", err.response?.data?.message || err.message);
     }
   };
-  
-  
+
   useEffect(() => {
     handleLogOut();
     const timer = setTimeout(async () => {
-      navigate('/auth');
+      navigate("/auth");
       await checkUserIsAuth();
     }, 2000);
-    
+
     return () => clearTimeout(timer);
   }, [navigate]);
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md text-center">

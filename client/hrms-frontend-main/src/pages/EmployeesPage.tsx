@@ -116,7 +116,7 @@ const EmployeeDialog = ({ isOpen, onClose, isEdit = false, employee = {} }: Empl
               <label className="block text-sm font-medium mb-1 text-gray-800">
                 Date of Joining<span className="text-red-500">*</span>
               </label>
-              <Input type="date" name="dateJoined" className="w-full" value={formData.joiningDate} onChange={handleChange} />
+              <Input type="date" name="joiningDate" className="w-full" value={formData.joiningDate} onChange={handleChange} />
             </div>
           </div>
 

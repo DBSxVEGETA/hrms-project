@@ -20,12 +20,9 @@ const getEmployeeById = async (req, res) => {
 };
 const getEmployeeByName = async (req, res) => {
   try {
-    
     const name = req.params.name.trim();
-    console.log("Searching for employee name:", name);
-    const employee = await Employee.findOne({ name: new RegExp(`^${name}$`, 'i') });
-    console.log("Found employee:", employee);
-    
+    const employee = await Employee.findOne({ name: new RegExp(`^${name}$`, "i") });
+
     if (!employee) return res.status(404).json({ message: "Employee not found" });
     res.status(200).json(employee);
   } catch (error) {
@@ -53,4 +50,4 @@ const deleteEmployee = async (req, res) => {
   }
 };
 
-module.exports = { getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee , getEmployeeByName };
+module.exports = { getAllEmployees, getEmployeeById, updateEmployee, deleteEmployee, getEmployeeByName };

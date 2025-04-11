@@ -6,8 +6,6 @@ const fs = require("fs");
 // Create a new candidate
 const createCandidate = async (req, res) => {
   try {
-    console.log("Candidate POST route hit");
-
     const { name, email, phone, experience, position, status } = req.body;
     const resume = req.file ? req.file.filename : null;
 

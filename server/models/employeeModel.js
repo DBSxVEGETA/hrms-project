@@ -4,7 +4,7 @@ const employeeSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String },
-  role: String,
+  position: String,
   department: String,
   status: { type: String, enum: ["Present", "Left"], default: "Present" },
   joiningDate: Date,
@@ -14,5 +14,3 @@ const employeeSchema = new mongoose.Schema({
 const Employee = mongoose.model("Employee", employeeSchema);
 
 module.exports = Employee;
-
-

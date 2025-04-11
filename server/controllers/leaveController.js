@@ -1,8 +1,6 @@
 const Leave = require("../models/leaveModel");
 
 const applyLeave = async (req, res) => {
-  console.log("req.body - " , req.body);
-  
   const { employee, reason, startDate, endDate, doc } = req.body;
 
   try {
