@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 6000;
 // Middleware
 
 app.use(cors({
-  origin: "http://localhost:8080", // Your frontend origin
-  credentials: true,              // 💥 Allow cookies
+  origin: "http://localhost:8080",
+  credentials: true,             
 }));
 
 app.use(express.json());
@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
   try {
     await DB.connectToDatabase();
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Server running on PORT${PORT}`);
     });
   } catch (error) {
     console.error(`❌ Server failed to start: ${error.message}`);

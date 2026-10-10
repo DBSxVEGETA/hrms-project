@@ -80,10 +80,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       <div className="h-screen bg-white flex flex-col transition-all duration-300 border-r border-gray-200 w-56">
         <div className="flex items-center justify-start p-4 border-b border-gray-200">
           <div className="flex items-center">
-            <div className="h-8 w-8 border-2 border-purple-700 flex items-center justify-center">
+            {/* <div className="h-8 w-8 border-2 border-purple-700 flex items-center justify-center">
               <Square size={16} className="text-purple-700" />
-            </div>
-            <span className="ml-2 font-bold text-purple-700">LOGO</span>
+            </div> */}
+            <span className="ml-2 font-bold text-purple-700">HRMS</span>
           </div>
         </div>
         
