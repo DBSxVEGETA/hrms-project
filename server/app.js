@@ -5,6 +5,8 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+
+
 const authRoutes = require("./routes/authRoutes");
 const candidateRoutes = require("./routes/candidateRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
@@ -13,7 +15,13 @@ const leaveRoutes = require("./routes/leaveRoutes");
 
 const app = express();
 
-app.use(cors("*")); // or a specific origin array if needed
+app.use(
+  cors({
+    origin:
+      process.env.CLIENT_URL || "http://localhost:8080",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +36,7 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/leaves", leaveRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.status(200).send("HRMS API is running!");
 });
 
 module.exports = app;

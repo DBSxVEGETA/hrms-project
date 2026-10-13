@@ -32,3 +32,6 @@ coverage/
 
 # Test output
 test-output/
+
+
+mongo-backup
