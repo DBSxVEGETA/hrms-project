@@ -9,7 +9,7 @@ const LogoutPage = () => {
 
   const checkUserIsAuth = async () => {
     try {
-      const res = await API.get("http://localhost:9500/api/auth/checkAuth", {
+      const res = await API.get("/api/auth/checkAuth", {
         withCredentials: true, // 💥 Accept cookies from backend
       });
       console.log("res - ", res.data?.user);
@@ -21,7 +21,7 @@ const LogoutPage = () => {
 
   const handleLogOut = async () => {
     try {
-      const res = await API.post("http://localhost:9500/api/auth/logout", {}, { withCredentials: true });
+      const res = await API.post("/api/auth/logout", {}, { withCredentials: true });
 
       console.log("Logged out -", res.data);
 

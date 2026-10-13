@@ -1,24 +1,30 @@
-
-import { useState , useEffect } from 'react';
-import { Edit, MoreVertical, Search, Trash2, X } from 'lucide-react';
-import MainLayout from '@/layouts/MainLayout';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState, useEffect } from "react";
+import { Edit, MoreVertical, Search, Trash2, X } from "lucide-react";
+import MainLayout from "@/layouts/MainLayout";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast"; 
+import { toast } from "@/components/ui/use-toast";
 import API from "axios";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 
 type CandidateDialogProps = {
@@ -26,7 +32,7 @@ type CandidateDialogProps = {
   onClose: () => void;
 };
 
-const AddCandidateDialog = ({ isOpen, onClose  }: CandidateDialogProps) => {
+const AddCandidateDialog = ({ isOpen, onClose }: CandidateDialogProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -63,7 +69,7 @@ const AddCandidateDialog = ({ isOpen, onClose  }: CandidateDialogProps) => {
     data.append("resume", resumeFile);
 
     try {
-      await API.post("http://localhost:9500/api/candidates", data, {
+      await API.post("/api/candidates", data, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
@@ -71,16 +77,23 @@ const AddCandidateDialog = ({ isOpen, onClose  }: CandidateDialogProps) => {
       });
 
       toast({ title: "Candidate created successfully!" });
-      onClose();
-      setFormData(true);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        position: "",
+        experience: "",
+      });
 
+      setResumeFile(null);
+      setResumeName("");
+      onClose();
     } catch (err: any) {
       toast({
         title: "Candidate Creation failed",
         description: err.response?.data?.message || "Something went wrong",
       });
 
-      setFormData(false);
     }
   };
 
@@ -213,11 +226,11 @@ const AddCandidateDialog = ({ isOpen, onClose  }: CandidateDialogProps) => {
 
 const CandidatesPage = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [candidatesData , setCandidatesData] = useState([]);
+  const [candidatesData, setCandidatesData] = useState([]);
 
   const fetchCandidates = async () => {
     try {
-      const res = await API.get("http://localhost:9500/api/candidates", {
+      const res = await API.get("/api/candidates", {
         withCredentials: true, // 💥 This sends the cookie with request
       });
       console.log("Fetched Candidates:", res.data);
@@ -240,49 +253,45 @@ const CandidatesPage = () => {
     fetchCandidates();
   }, [isAddDialogOpen]);
 
-
   const handleStatusChange = async (id: string, status: string) => {
     try {
       const res = await API.put(
-        `http://localhost:9500/api/candidates/${id}`,
+        `/api/candidates/${id}`,
         { status },
         {
           withCredentials: true,
-        }
+        },
       );
-  
+
       if (status === "Selected") {
         // ✅ Get current candidate details
-        const candidateRes = await API.get(
-          `http://localhost:9500/api/candidates/${id}`,
-          {
-            withCredentials: true,
-          }
-        );
-  
+        const candidateRes = await API.get(`/api/candidates/${id}`, {
+          withCredentials: true,
+        });
+
         const currentCandidateData = candidateRes.data;
-  
+
         // ✅ Promote to employee
         const promoteRes = await API.post(
-          `http://localhost:9500/api/candidates/promote/${id}`,
+          `/api/candidates/promote/${id}`,
           { currentCandidateData },
           {
             withCredentials: true,
-          }
+          },
         );
-  
+
         const employee = promoteRes.data.employee;
-  
+
         await markAttendance({
-          employee: employee, 
+          employee: employee,
           date: new Date().toISOString().split("T")[0],
           status: "Present",
           task: "task - 1",
           position: employee.position || "",
-          department: employee.department || ""
+          department: employee.department || "",
         });
       }
-  
+
       await fetchCandidates();
       toast({ title: "Status updated successfully!" });
     } catch (err: any) {
@@ -292,7 +301,7 @@ const CandidatesPage = () => {
       });
     }
   };
-  
+
   const markAttendance = async (attendanceData: {
     employee: any;
     date: any;
@@ -302,40 +311,39 @@ const CandidatesPage = () => {
     department: string;
   }) => {
     try {
-      const res = await API.post(
-        "http://localhost:9500/api/attendance/",
-        attendanceData,
-        {
-          withCredentials: true, // Include cookies if using session-based auth
-        }
-      );
-  
+      const res = await API.post("/api/attendance/", attendanceData, {
+        withCredentials: true, // Include cookies if using session-based auth
+      });
+
       console.log("Attendance marked:", res.data);
       toast({ title: "Attendance marked successfully!" });
     } catch (err: any) {
-      console.error("Error marking attendance:", err.response?.data || err.message);
+      console.error(
+        "Error marking attendance:",
+        err.response?.data || err.message,
+      );
       toast({
         title: "Failed to mark attendance",
         description: err.response?.data?.message || "Something went wrong",
       });
     }
   };
-  
+
   const getStatusForCandidate = (id: string) => {
-    const statusObj = candidatesData.find(item => item._id === id);
-    return statusObj ? statusObj.status : 'Pending';
+    const statusObj = candidatesData.find((item) => item._id === id);
+    return statusObj ? statusObj.status : "Pending";
   };
 
   const handleEditCandidate = async (id: string) => {
-    console.log('Edit candidate:', id);
+    console.log("Edit candidate:", id);
     // Implement edit functionality
   };
 
   const handleDeleteCandidate = async (id: string) => {
-    console.log('Delete candidate:', id);
+    console.log("Delete candidate:", id);
 
     try {
-      const res = await API.delete(`http://localhost:9500/api/candidates/${id}`, {
+      const res = await API.delete(`/api/candidates/${id}`, {
         withCredentials: true,
       });
       await fetchCandidates();
@@ -347,7 +355,7 @@ const CandidatesPage = () => {
       });
     }
   };
-  
+
   return (
     <MainLayout>
       <div className="mb-6 flex justify-between items-center">
@@ -362,12 +370,16 @@ const CandidatesPage = () => {
               <option>Rejected</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
               </svg>
             </div>
           </div>
-          
+
           <div className="relative inline-block">
             <select className="appearance-none bg-white border border-gray-300 rounded-md py-2 pl-4 pr-10 text-sm leading-tight text-gray-800 focus:outline-none focus:ring-1 focus:ring-purple-500">
               <option>Position</option>
@@ -376,24 +388,31 @@ const CandidatesPage = () => {
               <option>Manager</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
               </svg>
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <Input
               type="text"
               placeholder="Search"
               className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-gray-800 focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
           </div>
-          
-          <Button 
+
+          <Button
             onClick={() => setIsAddDialogOpen(true)}
             className="bg-purple-700 hover:bg-purple-800 text-white py-2 px-4 rounded-md"
           >
@@ -401,32 +420,60 @@ const CandidatesPage = () => {
           </Button>
         </div>
       </div>
-      
+
       <Table className="w-full">
         <TableHeader className="bg-purple-700 text-white rounded-t-lg">
           <TableRow>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Sr no.</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Candidates Name</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Email Address</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Phone Number</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Position</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Status</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Experience</TableHead>
-            <TableHead className="text-white font-medium text-left py-3 px-4">Action</TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Sr no.
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Candidates Name
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Email Address
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Phone Number
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Position
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Status
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Experience
+            </TableHead>
+            <TableHead className="text-white font-medium text-left py-3 px-4">
+              Action
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {candidatesData.map((candidate) => (
             <TableRow key={candidate._id} className="hover:bg-gray-50">
-              <TableCell className="py-3 px-4 text-gray-800">{candidate._id}</TableCell>
-              <TableCell className="py-3 px-4 text-gray-800">{candidate.name}</TableCell>
-              <TableCell className="py-3 px-4 text-gray-800">{candidate.email}</TableCell>
-              <TableCell className="py-3 px-4 text-gray-800">{candidate.phone}</TableCell>
-              <TableCell className="py-3 px-4 text-gray-800">{candidate.position}</TableCell>
+              <TableCell className="py-3 px-4 text-gray-800">
+                {candidate._id}
+              </TableCell>
+              <TableCell className="py-3 px-4 text-gray-800">
+                {candidate.name}
+              </TableCell>
+              <TableCell className="py-3 px-4 text-gray-800">
+                {candidate.email}
+              </TableCell>
+              <TableCell className="py-3 px-4 text-gray-800">
+                {candidate.phone}
+              </TableCell>
+              <TableCell className="py-3 px-4 text-gray-800">
+                {candidate.position}
+              </TableCell>
               <TableCell className="py-3 px-4">
-                <Select 
-                  value={getStatusForCandidate(candidate._id)} 
-                  onValueChange={(value) => handleStatusChange(candidate._id, value)}
+                <Select
+                  value={getStatusForCandidate(candidate._id)}
+                  onValueChange={(value) =>
+                    handleStatusChange(candidate._id, value)
+                  }
                 >
                   <SelectTrigger className="w-[130px] h-8 bg-white text-black border-gray-300">
                     <SelectValue />
@@ -440,7 +487,9 @@ const CandidatesPage = () => {
                   </SelectContent>
                 </Select>
               </TableCell>
-              <TableCell className="py-3 px-4 text-gray-800">{candidate.experience} Years</TableCell>
+              <TableCell className="py-3 px-4 text-gray-800">
+                {candidate.experience} Years
+              </TableCell>
               <TableCell className="py-3 px-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -448,19 +497,22 @@ const CandidatesPage = () => {
                       <MoreVertical size={18} />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="bg-white border-gray-200">
-                    <DropdownMenuItem 
+                  <DropdownMenuContent
+                    align="end"
+                    className="bg-white border-gray-200"
+                  >
+                    <DropdownMenuItem
                       onClick={() => handleEditCandidate(candidate._id)}
                       className="text-black hover:bg-gray-100 cursor-pointer"
                     >
-                      <Edit className="mr-2 h-4 w-4" /> 
+                      <Edit className="mr-2 h-4 w-4" />
                       <span>Edit</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleDeleteCandidate(candidate._id)}
                       className="text-red-600 hover:bg-red-50 cursor-pointer"
                     >
-                      <Trash2 className="mr-2 h-4 w-4" /> 
+                      <Trash2 className="mr-2 h-4 w-4" />
                       <span>Delete</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -470,10 +522,10 @@ const CandidatesPage = () => {
           ))}
         </TableBody>
       </Table>
-      
-      <AddCandidateDialog 
-        isOpen={isAddDialogOpen} 
-        onClose={() => setIsAddDialogOpen(false)} 
+
+      <AddCandidateDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
       />
     </MainLayout>
   );

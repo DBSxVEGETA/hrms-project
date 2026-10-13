@@ -52,7 +52,7 @@ const Sidebar = () => {
   const checkUserIsAuth = async () => {
     try {
       const res = await API.get(
-        "http://localhost:9500/api/auth/checkAuth",
+        "/api/auth/checkAuth",
         {
           withCredentials: true, // 💥 Accept cookies from backend
         }
@@ -73,7 +73,7 @@ const Sidebar = () => {
       if(authUser!=null){
         try {
           const res = await API.post(
-            "http://localhost:9500/api/auth/logout",
+            "/api/auth/logout",
             {
               withCredentials: true, // 💥 Accept cookies from backend
             }

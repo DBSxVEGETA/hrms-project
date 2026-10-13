@@ -59,7 +59,7 @@ const AddLeaveDialog = ({ isOpen, onClose }: LeaveDialogProps) => {
         formData.append("doc", document);
       }
 
-      const user = await API.get(`http://localhost:9500/api/employees/name/${employeeName}`, {
+      const user = await API.get(`/api/employees/name/${employeeName}`, {
         withCredentials: true,
       });
 
@@ -80,13 +80,13 @@ const AddLeaveDialog = ({ isOpen, onClose }: LeaveDialogProps) => {
       };
 
       const res = await API.post(
-        "http://localhost:9500/api/leaves",
+        "/api/leaves",
         { leaveData },
         {
           withCredentials: true,
         }
       );
-      // const res = await API.post("http://localhost:9500/api/leaves", formData, {
+      // const res = await API.post("/api/leaves", formData, {
       //   withCredentials: true,
       // });
 
@@ -205,7 +205,7 @@ const LeavesPage = () => {
 
   const fetchLeaves = async () => {
     try {
-      const res = await API.get("http://localhost:9500/api/leaves", {
+      const res = await API.get("/api/leaves", {
         withCredentials: true, // 💥 This sends the cookie with request
       });
       console.log("Fetched Leaves:", res.data);
@@ -248,7 +248,7 @@ const LeavesPage = () => {
     console.log("delete - ", id);
 
     try {
-      const res = await API.delete(`http://localhost:9500/api/leaves/${id}`, {
+      const res = await API.delete(`/api/leaves/${id}`, {
         withCredentials: true,
       });
       await fetchLeaves();

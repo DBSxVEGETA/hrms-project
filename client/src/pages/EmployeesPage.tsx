@@ -34,11 +34,11 @@ const EmployeeDialog = ({ isOpen, onClose, isEdit = false, employee = {} }: Empl
   const handleSubmit = async () => {
     try {
       if (isEdit && employee._id) {
-        const res = await API.put(`http://localhost:9500/api/employees/${employee._id}`, formData, { withCredentials: true });
+        const res = await API.put(`/api/employees/${employee._id}`, formData, { withCredentials: true });
         toast({ title: "Employee updated successfully!" });
         console.log("Updated employee:", res.data);
       } else {
-        const res = await API.post(`http://localhost:9500/api/employees`, formData, { withCredentials: true });
+        const res = await API.post(`/api/employees`, formData, { withCredentials: true });
         toast({ title: "Employee added successfully!" });
         console.log("New employee:", res.data);
       }
@@ -148,7 +148,7 @@ const EmployeesPage = () => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await API.get("http://localhost:9500/api/employees", {
+      const res = await API.get("/api/employees", {
         withCredentials: true, // 💥 This sends the cookie with request
       });
       console.log("Fetched Candidates:", res.data);
@@ -170,7 +170,7 @@ const EmployeesPage = () => {
     console.log("Delete Employee:", id);
 
     try {
-      const res = await API.delete(`http://localhost:9500/api/employees/${id}`, {
+      const res = await API.delete(`/api/employees/${id}`, {
         withCredentials: true,
       });
       await fetchEmployees();

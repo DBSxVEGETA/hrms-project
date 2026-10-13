@@ -49,7 +49,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const checkUserIsAuth = async () => {
     try {
       const res = await API.get(
-        "http://localhost:9500/api/auth/checkAuth",
+        "/api/auth/checkAuth",
         {
           withCredentials: true, // 💥 Accept cookies from backend
         }

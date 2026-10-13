@@ -40,7 +40,7 @@ const AttendancePage = () => {
 
   const fetchAttendance = async () => {
     try {
-      const res = await API.get("http://localhost:9500/api/attendance", {
+      const res = await API.get("/api/attendance", {
         withCredentials: true, // 💥 This sends the cookie with request
       });
       console.log("Fetched Attendaces:", res.data);
@@ -57,7 +57,7 @@ const AttendancePage = () => {
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
-      const res = await API.put(`http://localhost:9500/api/attendance/${id}`, { status }, {
+      const res = await API.put(`/api/attendance/${id}`, { status }, {
         withCredentials: true,
       });
 
@@ -86,7 +86,7 @@ const AttendancePage = () => {
     console.log('Delete Employee:', id);
 
     try {
-      const res = await API.delete(`http://localhost:9500/api/attendance/${id}`, {
+      const res = await API.delete(`/api/attendance/${id}`, {
         withCredentials: true,
       });
       await fetchAttendance();

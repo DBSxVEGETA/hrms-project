@@ -33,7 +33,7 @@ const AuthPage = () => {
     }
 
     try {
-      const res = await API.post("http://localhost:9500/api/auth/register", {
+      const res = await API.post("/api/auth/register", {
         name: fullName,
         email,
         password,
@@ -51,7 +51,7 @@ const AuthPage = () => {
   const handleLogin = async () => {
     try {
       const res = await API.post(
-        "http://localhost:9500/api/auth/login",
+        "/api/auth/login",
         { email, password },
         {
           withCredentials: true, // 💥 Accept cookies from backend
@@ -70,7 +70,7 @@ const AuthPage = () => {
 
   const checkUserIsAuth = async () => {
     try {
-      const res = await API.get("http://localhost:9500/api/auth/checkAuth", {
+      const res = await API.get("/api/auth/checkAuth", {
         withCredentials: true, // 💥 Accept cookies from backend
       });
 
