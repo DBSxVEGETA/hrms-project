@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-import API from "axios";
+import API from "../api/axios";
 import { toast } from "@/components/ui/use-toast";
 
 const AuthPage = () => {

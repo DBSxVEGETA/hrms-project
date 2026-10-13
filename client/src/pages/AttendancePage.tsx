@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast"; 
 
-import API from 'axios'
+import API from '../api/axios'
 import {
   DropdownMenu,
   DropdownMenuContent,

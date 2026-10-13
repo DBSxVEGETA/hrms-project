@@ -12,7 +12,7 @@ import {
   Square
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import API from 'axios';
+import API from '../api/axios';
 
 type SidebarItemProps = {
   icon: React.ReactNode;
